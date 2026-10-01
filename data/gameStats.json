@@ -16,7 +16,7 @@
   },
   "betweenLinesPassing": {
     "passes": 40,
-    "betweenLines": 8,
+    "betweenLines": 6,
     "wrong": 11,
     "videoLink": ""
   },
