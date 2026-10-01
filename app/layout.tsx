@@ -4,7 +4,7 @@ import "./pdf.css";
 
 export const metadata: Metadata = {
   title: "Danilo Reis — Game Stats | SGA Performance",
-  description: "Individual match statistics for Danilo Reis (Club Ohio).",
+  description: "Individual match statistics for Danilo Reis (Players Development Academy).",
 };
 
 export const viewport = {

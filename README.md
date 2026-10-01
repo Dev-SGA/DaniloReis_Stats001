@@ -1,6 +1,6 @@
 # Danilo Reis — Stats de Jogo
 
-App Next.js (Vercel) para exibir estatísticas individuais de **Danilo Reis** (Club Ohio) durante um jogo.
+App Next.js (Vercel) para exibir estatísticas individuais de **Danilo Reis** (Players Development Academy — PDA) durante um jogo.
 
 Layout e estrutura alinhados ao repositório de stats de Ben Dezalovski (SGA Performance).
 
