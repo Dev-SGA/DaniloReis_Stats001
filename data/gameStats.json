@@ -1,0 +1,29 @@
+{
+  "meta": {
+    "title": "Stats Game Report",
+    "subtitle": "Individual match statistics",
+    "session": "001"
+  },
+  "player": {
+    "name": "Danilo Reis",
+    "club": "Club Ohio",
+    "photo": "/player/danilo-reis.jpeg"
+  },
+  "offensiveScanning": {
+    "passesReceived": 38,
+    "noOffensiveScanning": 10,
+    "videoLink": ""
+  },
+  "betweenLinesPassing": {
+    "passes": 40,
+    "betweenLines": 8,
+    "wrong": 11,
+    "videoLink": ""
+  },
+  "enteringBox": {
+    "total": 8,
+    "inOrganization": 7,
+    "inTransition": 1,
+    "organizationRightWing": 7
+  }
+}
