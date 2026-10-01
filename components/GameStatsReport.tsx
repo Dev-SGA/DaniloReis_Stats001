@@ -81,35 +81,36 @@ export function GameStatsReport({ stats }: GameStatsReportProps) {
   const topics: Topic[] = [
     {
       id: "scanning",
-      title: "Mapeamento Ofensivo (Scanning)",
+      kicker: "Scanning",
+      title: "Offensive Scanning",
       phase: "build-up",
       content: (
         <>
           <MetricFlow
             items={[
               <div key="received" className="metric-card metric-card--hero">
-                <h3 className="metric-card__title">Passes recebidos</h3>
+                <h3 className="metric-card__title">Passes received</h3>
                 <span className="metric-card__value">{offensiveScanning.passesReceived}</span>
-                <p className="metric-card__caption">Total de recepções analisadas no mapeamento ofensivo</p>
+                <p className="metric-card__caption">Receptions tracked for offensive scanning</p>
               </div>,
               <SplitMeter
                 key="scanning"
-                title="Mapeamento ofensivo"
-                headline={`${offensiveScanning.noOffensiveScanning} de ${offensiveScanning.passesReceived} · ${percent(
+                title="Offensive scanning"
+                headline={`${offensiveScanning.noOffensiveScanning} of ${offensiveScanning.passesReceived} · ${percent(
                   offensiveScanning.noOffensiveScanning,
                   offensiveScanning.passesReceived,
-                )}% sem mapeamento`}
+                )}% without scan`}
                 primary={scanningDone}
                 secondary={offensiveScanning.noOffensiveScanning}
-                primaryLabel="Com mapeamento ofensivo"
-                secondaryLabel="Não fez mapeamento ofensivo"
+                primaryLabel="Scanned before receiving"
+                secondaryLabel="No offensive scan"
                 primaryTone="positive"
                 secondaryTone="negative"
               />,
             ]}
           />
           <p className="metric-card__caption" style={{ marginTop: "0.75rem" }}>
-            Taxa de mapeamento: {scanningRate}% ({scanningDone} de {offensiveScanning.passesReceived})
+            Scanning rate: {scanningRate}% ({scanningDone} of {offensiveScanning.passesReceived})
           </p>
           <ClipLinks scope="scanning" />
         </>
@@ -117,7 +118,8 @@ export function GameStatsReport({ stats }: GameStatsReportProps) {
     },
     {
       id: "passing",
-      title: "Passe entrelinhas (Passing)",
+      kicker: "Passing",
+      title: "Between-the-Lines Passing",
       phase: "build-up",
       content: (
         <>
@@ -126,27 +128,27 @@ export function GameStatsReport({ stats }: GameStatsReportProps) {
               <div key="passes" className="metric-card metric-card--hero">
                 <h3 className="metric-card__title">Passes</h3>
                 <span className="metric-card__value">{passTotal}</span>
-                <p className="metric-card__caption">Total de passes no jogo</p>
+                <p className="metric-card__caption">Total passes in the match</p>
               </div>,
               <div key="between" className="metric-card">
-                <h3 className="metric-card__title">Entrelinhas</h3>
+                <h3 className="metric-card__title">Between the lines</h3>
                 <span className="metric-card__value">{betweenLinesPassing.betweenLines}</span>
-                <span className="metric-card__pct">{betweenLinesPct}% dos passes</span>
+                <span className="metric-card__pct">{betweenLinesPct}% of passes</span>
               </div>,
               <div key="wrong" className="metric-card">
-                <h3 className="metric-card__title">Errados</h3>
+                <h3 className="metric-card__title">Misplaced</h3>
                 <span className="metric-card__value">{betweenLinesPassing.wrong}</span>
-                <span className="metric-card__pct">{percent(betweenLinesPassing.wrong, passTotal)}% dos passes</span>
+                <span className="metric-card__pct">{percent(betweenLinesPassing.wrong, passTotal)}% of passes</span>
               </div>,
             ]}
           />
           <SplitMeter
-            title="Precisão de passe"
-            headline={`${accuracyRate}% · ${completedPasses} de ${passTotal} completos`}
+            title="Pass accuracy"
+            headline={`${accuracyRate}% · ${completedPasses} of ${passTotal} completed`}
             primary={completedPasses}
             secondary={betweenLinesPassing.wrong}
-            primaryLabel="Completos"
-            secondaryLabel="Errados"
+            primaryLabel="Completed"
+            secondaryLabel="Misplaced"
             primaryTone="positive"
             secondaryTone="negative"
           />
@@ -156,32 +158,33 @@ export function GameStatsReport({ stats }: GameStatsReportProps) {
     },
     {
       id: "entering-box",
-      title: "Pisar na Área",
+      kicker: "Final third",
+      title: "Entering the Penalty Area",
       phase: "build-up",
       content: (
         <>
           <div className="metric-card metric-card--hero">
             <h3 className="metric-card__title">Total</h3>
             <span className="metric-card__value">{enteringBox.total}</span>
-            <p className="metric-card__caption">Entradas na área adversária</p>
+            <p className="metric-card__caption">Entries into the opposition penalty area</p>
           </div>
           <SplitMeter
-            title="Contexto da entrada"
-            headline={`${enteringBox.inOrganization} em organização · ${enteringBox.inTransition} em transição`}
+            title="Phase of play"
+            headline={`${enteringBox.inOrganization} in possession · ${enteringBox.inTransition} in transition`}
             primary={enteringBox.inOrganization}
             secondary={enteringBox.inTransition}
-            primaryLabel="Em organização"
-            secondaryLabel="Em transição"
+            primaryLabel="In possession"
+            secondaryLabel="In transition"
             primaryTone="accent"
             secondaryTone="muted"
           />
           <div className="metric-card">
-            <h3 className="metric-card__title">Organização — corredor direito</h3>
+            <h3 className="metric-card__title">In possession — right channel</h3>
             <p className="metric-card__headline">
-              {enteringBox.organizationRightWing} de {enteringBox.inOrganization} em jogadas pelo corredor direito
+              {enteringBox.organizationRightWing} of {enteringBox.inOrganization} via the right channel
             </p>
             <p className="metric-card__caption">
-              Dos {enteringBox.inOrganization} em organização, todos em jogadas pelo corredor direito.
+              All {enteringBox.inOrganization} in-possession entries came from attacks down the right channel.
             </p>
           </div>
         </>

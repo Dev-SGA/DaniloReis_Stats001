@@ -11,11 +11,6 @@ type Phase = "build-up" | "defensive";
 
 type Tone = "blue" | "green" | "red" | "grey";
 
-const PHASE_LABEL: Record<Phase, string> = {
-  "build-up": "Build-Up",
-  defensive: "Defensive Phase",
-};
-
 function pct(value: number, total: number): number {
   return total > 0 ? Math.round((value / total) * 100) : 0;
 }
@@ -88,6 +83,7 @@ function RateBar({
 
 function Section({
   phase,
+  kicker,
   title,
   value,
   unit,
@@ -95,6 +91,7 @@ function Section({
   footer,
 }: {
   phase: Phase;
+  kicker: string;
   title: string;
   value: number;
   unit: string;
@@ -103,7 +100,7 @@ function Section({
 }) {
   return (
     <section className={`spdf-section spdf-section--${phase}`}>
-      <p className="spdf-section__phase">{PHASE_LABEL[phase]}</p>
+      <p className="spdf-section__phase">{kicker}</p>
       <h3 className="spdf-section__title">{title}</h3>
       <div className="spdf-section__body">
         <div className="spdf-section__kpi">
@@ -119,8 +116,8 @@ function Section({
 
 function PdfVideoLinks({ scanningVideoLink, passingVideoLink }: { scanningVideoLink: string; passingVideoLink: string }) {
   const rows = [
-    { label: "Mapeamento ofensivo (Scanning)", url: scanningVideoLink.trim() },
-    { label: "Passe entrelinhas", url: passingVideoLink.trim() },
+    { label: "Offensive scanning", url: scanningVideoLink.trim() },
+    { label: "Between-the-lines passing", url: passingVideoLink.trim() },
   ];
 
   return (
@@ -182,27 +179,28 @@ export function StatsGamePdfSheet({ stats, photoUrl, logoUrl }: StatsGamePdfShee
         <div className="spdf-grid">
           <Section
             phase="build-up"
-            title="Mapeamento Ofensivo (Scanning)"
+            kicker="Scanning"
+            title="Offensive Scanning"
             value={offensiveScanning.passesReceived}
-            unit="Passes recebidos"
+            unit="Passes received"
             aside={
               <StatTiles
                 items={[
-                  { label: "Com mapeamento", value: scanningDone, tone: "green" },
+                  { label: "Scanned", value: scanningDone, tone: "green" },
                   {
-                    label: "Sem mapeamento",
+                    label: "No scan",
                     value: offensiveScanning.noOffensiveScanning,
                     tone: "red",
-                    detail: `${pct(offensiveScanning.noOffensiveScanning, offensiveScanning.passesReceived)}% das recepções`,
+                    detail: `${pct(offensiveScanning.noOffensiveScanning, offensiveScanning.passesReceived)}% of receptions`,
                   },
                 ]}
               />
             }
             footer={
               <RateBar
-                label="Taxa de mapeamento"
+                label="Scanning rate"
                 value={pct(scanningDone, offensiveScanning.passesReceived)}
-                note={`${scanningDone} de ${offensiveScanning.passesReceived} com mapeamento ofensivo`}
+                note={`${scanningDone} of ${offensiveScanning.passesReceived} with offensive scanning`}
                 segments={[
                   { value: scanningDone, tone: "green" },
                   { value: offensiveScanning.noOffensiveScanning, tone: "red" },
@@ -213,21 +211,22 @@ export function StatsGamePdfSheet({ stats, photoUrl, logoUrl }: StatsGamePdfShee
 
           <Section
             phase="build-up"
-            title="Passe entrelinhas (Passing)"
+            kicker="Passing"
+            title="Between-the-Lines Passing"
             value={betweenLinesPassing.passes}
-            unit="Total de passes"
+            unit="Total passes"
             aside={
               <Highlight
                 value={pct(betweenLinesPassing.betweenLines, betweenLinesPassing.passes)}
-                label="Passes entrelinhas"
-                note={`${betweenLinesPassing.betweenLines} de ${betweenLinesPassing.passes} passes`}
+                label="Between-the-lines passes"
+                note={`${betweenLinesPassing.betweenLines} of ${betweenLinesPassing.passes} passes`}
               />
             }
             footer={
               <RateBar
-                label="Precisão de passe"
+                label="Pass accuracy"
                 value={pct(completedPasses, betweenLinesPassing.passes)}
-                note={`${completedPasses} completos · ${betweenLinesPassing.wrong} errados · ${betweenLinesPassing.betweenLines} entrelinhas`}
+                note={`${completedPasses} completed · ${betweenLinesPassing.wrong} misplaced · ${betweenLinesPassing.betweenLines} between the lines`}
                 segments={[
                   { value: completedPasses, tone: "green" },
                   { value: betweenLinesPassing.wrong, tone: "red" },
@@ -238,21 +237,21 @@ export function StatsGamePdfSheet({ stats, photoUrl, logoUrl }: StatsGamePdfShee
 
           <Section
             phase="build-up"
-            title="Pisar na Área"
+            kicker="Final third"
+            title="Entering the Penalty Area"
             value={enteringBox.total}
-            unit="Entradas na área"
+            unit="Penalty area entries"
             aside={
               <StatTiles
                 items={[
-                  { label: "Em organização", value: enteringBox.inOrganization, tone: "blue" },
-                  { label: "Em transição", value: enteringBox.inTransition, tone: "grey" },
+                  { label: "In possession", value: enteringBox.inOrganization, tone: "blue" },
+                  { label: "In transition", value: enteringBox.inTransition, tone: "grey" },
                 ]}
               />
             }
             footer={
               <p className="spdf-note">
-                Dos {enteringBox.inOrganization} em organização, {enteringBox.organizationRightWing} pelo corredor
-                direito (todos em jogadas pelo corredor direito).
+                All {enteringBox.inOrganization} in-possession entries came from attacks down the right channel.
               </p>
             }
           />

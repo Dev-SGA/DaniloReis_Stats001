@@ -6,6 +6,8 @@ export type Phase = "build-up" | "defensive";
 
 export type Topic = {
   id: string;
+  /** Small label above the topic title (e.g. Scanning, Passing). */
+  kicker: string;
   title: string;
   phase: Phase;
   content: React.ReactNode;
@@ -65,7 +67,7 @@ export function TopicsBoard({ topics }: TopicsBoardProps) {
                 aria-controls={panelId}
               >
                 <span className="topic__trigger-text">
-                  <span className="topic__phase">{PHASE_LABEL[topic.phase]}</span>
+                  <span className="topic__phase">{topic.kicker || PHASE_LABEL[topic.phase]}</span>
                   <span className="topic__title">{topic.title}</span>
                 </span>
                 <span className="topic__chevron" aria-hidden="true" />

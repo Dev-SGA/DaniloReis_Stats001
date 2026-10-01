@@ -1,22 +1,22 @@
-# Danilo Reis — Stats de Jogo
+# Danilo Reis — Match Stats
 
-App Next.js (Vercel) para exibir estatísticas individuais de **Danilo Reis** (Players Development Academy — PDA) durante um jogo.
+Next.js app (Vercel) for **Danilo Reis** (Players Development Academy — PDA) individual match statistics.
 
-Layout e estrutura alinhados ao repositório de stats de Ben Dezalovski (SGA Performance).
+Layout aligned with the Ben Dezalovski stats repo (SGA Performance).
 
-## Desenvolvimento
+## Development
 
 ```bash
 npm install
 npm run dev
 ```
 
-Abra [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3000](http://localhost:3000).
 
-## Dados
+## Data
 
-Edite `data/gameStats.json` para atualizar números e links de vídeo (`offensiveScanning`, `betweenLinesPassing`, `enteringBox`).
+Edit `data/gameStats.json` to update numbers and video links (`offensiveScanning`, `betweenLinesPassing`, `enteringBox`).
 
 ## Deploy
 
-Conecte o repositório na Vercel; o `vercel.json` já define o framework Next.js.
+Connect the repository on Vercel; `vercel.json` sets the Next.js framework.
