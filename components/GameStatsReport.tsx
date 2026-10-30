@@ -192,7 +192,7 @@ function buildTopics(match: MatchStats): Topic[] {
     match.perGame ? `Average ${what} per game` : `Total ${what} across recorded matches`;
   const scanningClip = isSeason
     ? undefined
-    : matchVideoClip(match, "scanning", "Offensive scanning", "Scanning");
+    : matchVideoClip(match, "scanning", "Offensive scanning", "Scanning", "No offensive scan", "No scan");
   const passingClip = isSeason
     ? undefined
     : matchVideoClip(

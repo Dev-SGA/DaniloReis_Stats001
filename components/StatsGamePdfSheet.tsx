@@ -46,7 +46,7 @@ function PdfPlayTarget({ href, children }: { href?: string; children: React.Reac
 }
 
 function resolveScanningClip(stats: GameStats): string | undefined {
-  const fromList = clipUrl(stats.videos, "Offensive scanning", "Scanning")?.trim();
+  const fromList = clipUrl(stats.videos, "Offensive scanning", "Scanning", "No offensive scan", "No scan")?.trim();
   const fallback = stats.offensiveScanning.videoLink.trim();
   return fromList || fallback || undefined;
 }
@@ -167,11 +167,16 @@ function Section({
   );
 }
 
-function PdfVideoLinks({ scanningVideoLink, passingVideoLink }: { scanningVideoLink: string; passingVideoLink: string }) {
-  const rows = [
-    { label: "Offensive scanning", url: scanningVideoLink.trim() },
-    { label: "Between-the-lines passing", url: passingVideoLink.trim() },
-  ];
+function PdfVideoLinks({ stats }: { stats: GameStats }) {
+  const fromList = (stats.videos ?? [])
+    .map((video) => ({ label: video.label, url: video.url.trim() }))
+    .filter((row) => row.url.length > 0);
+  const rows = fromList.length
+    ? fromList
+    : [
+        { label: "Offensive scanning", url: stats.offensiveScanning.videoLink.trim() },
+        { label: "Between-the-lines passing", url: stats.betweenLinesPassing.videoLink.trim() },
+      ];
 
   return (
     <section className="spdf-videos" aria-label="Video clips">
@@ -339,10 +344,7 @@ export function StatsGamePdfSheet({
           />
         </div>
 
-        <PdfVideoLinks
-          scanningVideoLink={scanningClip ?? ""}
-          passingVideoLink={passingClip ?? ""}
-        />
+        <PdfVideoLinks stats={stats} />
 
         <footer className="spdf-foot">
           <span>{BRAND.name}</span>

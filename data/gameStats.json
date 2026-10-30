@@ -55,7 +55,17 @@
         "inOrganization": 6,
         "inTransition": 4,
         "organizationRightWing": 0
-      }
+      },
+      "videos": [
+        {
+          "label": "No offensive scan",
+          "url": "https://drive.google.com/file/d/1vs9lMkbdNJUGvafFcEWO8yuflZenI4I_/view?usp=drive_link"
+        },
+        {
+          "label": "Wrong passes",
+          "url": "https://drive.google.com/file/d/1Fe6lHc4YzkSvf5QXBYv8-LQ7APjgwqoG/view?usp=drive_link"
+        }
+      ]
     }
   ]
 }
