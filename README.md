@@ -15,7 +15,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Data
 
-Edit `data/gameStats.json` to update numbers and video links (`offensiveScanning`, `betweenLinesPassing`, `enteringBox`).
+Edit `data/gameStats.json` to update numbers and video links. Each entry in `matches` holds one game (`offensiveScanning`, `betweenLinesPassing`, `enteringBox`); a Season tab aggregates all matches automatically.
 
 ## Deploy
 

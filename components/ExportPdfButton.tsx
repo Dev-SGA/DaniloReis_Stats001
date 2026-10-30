@@ -35,6 +35,9 @@ export function ExportPdfButton({ stats }: ExportPdfButtonProps) {
           stats={exportStats}
           photoUrl={`${origin}${stats.player.photo}`}
           logoUrl={`${origin}${BRAND.logoTrimmed}`}
+          playIconUrl={`${origin}/brand/play-icon.png`}
+          clubLogoUrl={stats.player.clubLogo ? `${origin}${stats.player.clubLogo}` : undefined}
+          opponentLogoUrl={stats.opponentLogo ? `${origin}${stats.opponentLogo}` : undefined}
         />,
       );
       await new Promise<void>((resolve) => {
@@ -51,7 +54,7 @@ export function ExportPdfButton({ stats }: ExportPdfButtonProps) {
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-|-$/g, "");
-      const session = stats.meta.session?.trim() || "001";
+      const session = stats.meta.fileSlug?.trim() || stats.meta.session?.trim() || "001";
 
       await exportStatsSlideToPdf(sheet, `${safeName || "athlete"}-stats-${session}.pdf`);
     } catch (caught) {

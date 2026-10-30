@@ -1,10 +1,13 @@
 import { BRAND } from "@/lib/brand";
-import type { GameStats } from "@/lib/stats";
+import { clipUrl, formatCount, type GameStats } from "@/lib/stats";
 
 type StatsGamePdfSheetProps = {
   stats: GameStats;
   photoUrl: string;
   logoUrl: string;
+  playIconUrl: string;
+  clubLogoUrl?: string;
+  opponentLogoUrl?: string;
 };
 
 type Phase = "build-up" | "defensive";
@@ -23,12 +26,52 @@ function linkHost(url: string): string {
   }
 }
 
+function PdfPlay({ href, playIconUrl }: { href?: string; playIconUrl: string }) {
+  if (!href) return null;
+  return (
+    <a className="spdf-play" href={href} data-pdf-link={href} target="_blank" rel="noreferrer" aria-label="Open video">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={playIconUrl} alt="" className="spdf-play__icon" width={14} height={14} />
+    </a>
+  );
+}
+
+function PdfPlayTarget({ href, children }: { href?: string; children: React.ReactNode }) {
+  if (!href) return <>{children}</>;
+  return (
+    <a className="spdf-play-target" href={href} data-pdf-link={href} target="_blank" rel="noreferrer">
+      {children}
+    </a>
+  );
+}
+
+function resolveScanningClip(stats: GameStats): string | undefined {
+  const fromList = clipUrl(stats.videos, "Offensive scanning", "Scanning")?.trim();
+  const fallback = stats.offensiveScanning.videoLink.trim();
+  return fromList || fallback || undefined;
+}
+
+function resolvePassingClip(stats: GameStats): string | undefined {
+  const fromList = clipUrl(
+    stats.videos,
+    "Between-the-lines passing",
+    "Between the lines",
+    "Passing",
+    "Wrong passes",
+    "Misplaced passes",
+  )?.trim();
+  const fallback = stats.betweenLinesPassing.videoLink.trim();
+  return fromList || fallback || undefined;
+}
+
 function StatTiles({ items }: { items: { label: string; value: number; tone?: Tone; detail?: string }[] }) {
   return (
     <ul className="spdf-stats">
       {items.map((item) => (
         <li key={item.label} className="spdf-stat">
-          <span className={`spdf-stat__value${item.tone ? ` spdf-stat__value--${item.tone}` : ""}`}>{item.value}</span>
+          <span className={`spdf-stat__value${item.tone ? ` spdf-stat__value--${item.tone}` : ""}`}>
+            {formatCount(item.value)}
+          </span>
           <span className="spdf-stat__label">{item.label}</span>
           {item.detail ? <span className="spdf-stat__detail">{item.detail}</span> : null}
         </li>
@@ -89,6 +132,8 @@ function Section({
   unit,
   aside,
   footer,
+  playHref,
+  playIconUrl,
 }: {
   phase: Phase;
   kicker: string;
@@ -97,14 +142,22 @@ function Section({
   unit: string;
   aside: React.ReactNode;
   footer?: React.ReactNode;
+  playHref?: string;
+  playIconUrl: string;
 }) {
   return (
     <section className={`spdf-section spdf-section--${phase}`}>
       <p className="spdf-section__phase">{kicker}</p>
-      <h3 className="spdf-section__title">{title}</h3>
+      <h3 className="spdf-section__title">
+        {title}
+        <PdfPlay href={playHref} playIconUrl={playIconUrl} />
+      </h3>
       <div className="spdf-section__body">
         <div className="spdf-section__kpi">
-          <span className="spdf-section__value">{value}</span>
+          <span className="spdf-section__value">
+            <PdfPlayTarget href={playHref}>{formatCount(value)}</PdfPlayTarget>
+            <PdfPlay href={playHref} playIconUrl={playIconUrl} />
+          </span>
           <span className="spdf-section__unit">{unit}</span>
         </div>
         <div className="spdf-section__aside">{aside}</div>
@@ -146,10 +199,19 @@ function PdfVideoLinks({ scanningVideoLink, passingVideoLink }: { scanningVideoL
   );
 }
 
-export function StatsGamePdfSheet({ stats, photoUrl, logoUrl }: StatsGamePdfSheetProps) {
+export function StatsGamePdfSheet({
+  stats,
+  photoUrl,
+  logoUrl,
+  playIconUrl,
+  clubLogoUrl,
+  opponentLogoUrl,
+}: StatsGamePdfSheetProps) {
   const { player, meta, offensiveScanning, betweenLinesPassing, enteringBox } = stats;
   const scanningDone = offensiveScanning.passesReceived - offensiveScanning.noOffensiveScanning;
   const completedPasses = betweenLinesPassing.passes - betweenLinesPassing.wrong;
+  const scanningClip = resolveScanningClip(stats);
+  const passingClip = resolvePassingClip(stats);
 
   return (
     <article className="stats-pdf" aria-hidden="true">
@@ -160,7 +222,13 @@ export function StatsGamePdfSheet({ stats, photoUrl, logoUrl }: StatsGamePdfShee
         <div className="spdf-side__identity">
           <p className="spdf-side__label">Athlete</p>
           <h2 className="spdf-side__name">{player.name}</h2>
-          <p className="spdf-side__club">{player.club}</p>
+          <p className="spdf-side__club">
+            {clubLogoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={clubLogoUrl} alt="" className="spdf-side__club-logo" />
+            ) : null}
+            {player.club}
+          </p>
         </div>
         <p className="spdf-side__slogan">{BRAND.slogan}</p>
       </aside>
@@ -172,17 +240,25 @@ export function StatsGamePdfSheet({ stats, photoUrl, logoUrl }: StatsGamePdfShee
             <h1 className="spdf-head__title">{meta.title}</h1>
           </div>
           <div className="spdf-head__meta">
-            <span>{meta.subtitle}</span>
+            <span className="spdf-head__match">
+              {opponentLogoUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={opponentLogoUrl} alt="" className="spdf-head__logo" />
+              ) : null}
+              {meta.subtitle}
+            </span>
           </div>
         </header>
 
-        <div className="spdf-grid">
+        <div className="spdf-grid spdf-grid--three">
           <Section
             phase="build-up"
             kicker="Scanning"
             title="Offensive Scanning"
             value={offensiveScanning.passesReceived}
             unit="Passes received"
+            playHref={scanningClip}
+            playIconUrl={playIconUrl}
             aside={
               <StatTiles
                 items={[
@@ -200,7 +276,7 @@ export function StatsGamePdfSheet({ stats, photoUrl, logoUrl }: StatsGamePdfShee
               <RateBar
                 label="Scanning rate"
                 value={pct(scanningDone, offensiveScanning.passesReceived)}
-                note={`${scanningDone} of ${offensiveScanning.passesReceived} with offensive scanning`}
+                note={`${formatCount(scanningDone)} of ${formatCount(offensiveScanning.passesReceived)} with offensive scanning`}
                 segments={[
                   { value: scanningDone, tone: "green" },
                   { value: offensiveScanning.noOffensiveScanning, tone: "red" },
@@ -215,18 +291,20 @@ export function StatsGamePdfSheet({ stats, photoUrl, logoUrl }: StatsGamePdfShee
             title="Between-the-Lines Passing"
             value={betweenLinesPassing.passes}
             unit="Total passes"
+            playHref={passingClip}
+            playIconUrl={playIconUrl}
             aside={
               <Highlight
                 value={pct(betweenLinesPassing.betweenLines, betweenLinesPassing.passes)}
                 label="Between-the-lines passes"
-                note={`${betweenLinesPassing.betweenLines} of ${betweenLinesPassing.passes} passes`}
+                note={`${formatCount(betweenLinesPassing.betweenLines)} of ${formatCount(betweenLinesPassing.passes)} passes`}
               />
             }
             footer={
               <RateBar
                 label="Pass accuracy"
                 value={pct(completedPasses, betweenLinesPassing.passes)}
-                note={`${completedPasses} completed · ${betweenLinesPassing.wrong} misplaced · ${betweenLinesPassing.betweenLines} between the lines`}
+                note={`${formatCount(completedPasses)} completed · ${formatCount(betweenLinesPassing.wrong)} misplaced · ${formatCount(betweenLinesPassing.betweenLines)} between the lines`}
                 segments={[
                   { value: completedPasses, tone: "green" },
                   { value: betweenLinesPassing.wrong, tone: "red" },
@@ -241,6 +319,7 @@ export function StatsGamePdfSheet({ stats, photoUrl, logoUrl }: StatsGamePdfShee
             title="Entering the Penalty Area"
             value={enteringBox.total}
             unit="Penalty area entries"
+            playIconUrl={playIconUrl}
             aside={
               <StatTiles
                 items={[
@@ -250,16 +329,19 @@ export function StatsGamePdfSheet({ stats, photoUrl, logoUrl }: StatsGamePdfShee
               />
             }
             footer={
-              <p className="spdf-note">
-                All {enteringBox.inOrganization} in-possession entries came from attacks down the right channel.
-              </p>
+              enteringBox.inOrganization > 0 ? (
+                <p className="spdf-note">
+                  {formatCount(enteringBox.organizationRightWing)} of {formatCount(enteringBox.inOrganization)}{" "}
+                  in-possession entries came from attacks down the right channel.
+                </p>
+              ) : undefined
             }
           />
         </div>
 
         <PdfVideoLinks
-          scanningVideoLink={offensiveScanning.videoLink}
-          passingVideoLink={betweenLinesPassing.videoLink}
+          scanningVideoLink={scanningClip ?? ""}
+          passingVideoLink={passingClip ?? ""}
         />
 
         <footer className="spdf-foot">
