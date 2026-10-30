@@ -12,7 +12,7 @@ type StatsGamePdfSheetProps = {
 
 type Phase = "build-up" | "defensive";
 
-type Tone = "blue" | "green" | "red" | "grey";
+type Tone = "blue" | "green" | "red" | "grey" | "amber";
 
 function pct(value: number, total: number): number {
   return total > 0 ? Math.round((value / total) * 100) : 0;
@@ -227,7 +227,7 @@ export function StatsGamePdfSheet({
                   {
                     label: "No scan",
                     value: offensiveScanning.noOffensiveScanning,
-                    tone: "red",
+                    tone: "amber",
                     detail: `${pct(offensiveScanning.noOffensiveScanning, offensiveScanning.passesReceived)}% of receptions`,
                     href: scanningClip,
                   },
@@ -241,7 +241,7 @@ export function StatsGamePdfSheet({
                 note={`${formatCount(scanningDone)} of ${formatCount(offensiveScanning.passesReceived)} with offensive scanning`}
                 segments={[
                   { value: scanningDone, tone: "green" },
-                  { value: offensiveScanning.noOffensiveScanning, tone: "red" },
+                  { value: offensiveScanning.noOffensiveScanning, tone: "amber" },
                 ]}
               />
             }
@@ -264,9 +264,9 @@ export function StatsGamePdfSheet({
                     detail: `${pct(betweenLinesPassing.betweenLines, betweenLinesPassing.passes)}% of passes`,
                   },
                   {
-                    label: "Misplaced",
+                    label: "Inaccurate passes",
                     value: betweenLinesPassing.wrong,
-                    tone: "red",
+                    tone: "amber",
                     detail: `${pct(betweenLinesPassing.wrong, betweenLinesPassing.passes)}% of passes`,
                     href: passingClip,
                   },
@@ -280,7 +280,7 @@ export function StatsGamePdfSheet({
                 note={`${formatCount(completedPasses)} of ${formatCount(betweenLinesPassing.passes)} passes completed`}
                 segments={[
                   { value: completedPasses, tone: "green" },
-                  { value: betweenLinesPassing.wrong, tone: "red" },
+                  { value: betweenLinesPassing.wrong, tone: "amber" },
                 ]}
               />
             }

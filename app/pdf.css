@@ -380,6 +380,10 @@
   color: #a1343c;
 }
 
+.spdf-stat__value--amber {
+  color: #a8791a;
+}
+
 .spdf-stat__value--grey {
   color: #6b8192;
 }
@@ -474,6 +478,10 @@
 
 .spdf-rate__seg--red {
   background: #a1343c;
+}
+
+.spdf-rate__seg--amber {
+  background: #cf9c1a;
 }
 
 .spdf-rate__seg--grey {

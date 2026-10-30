@@ -25,7 +25,7 @@ type GameStatsReportProps = {
   report: StatsReport;
 };
 
-type BarTone = "accent" | "positive" | "negative" | "muted";
+type BarTone = "accent" | "positive" | "negative" | "warn" | "muted";
 
 function percent(value: number, total: number): number {
   return total > 0 ? Math.round((value / total) * 100) : 0;
@@ -253,7 +253,7 @@ function buildTopics(match: MatchStats): Topic[] {
                 primaryLabel="Scanned before receiving"
                 secondaryLabel="No offensive scan"
                 primaryTone="positive"
-                secondaryTone="negative"
+                secondaryTone="warn"
                 secondaryHref={scanningClip}
                 games={games}
                 countUnit="receptions"
@@ -300,7 +300,7 @@ function buildTopics(match: MatchStats): Topic[] {
                 <span className="metric-card__pct">{betweenLinesPct}% of passes</span>
               </div>,
               <div key="wrong" className="metric-card">
-                <h3 className="metric-card__title">Misplaced</h3>
+                <h3 className="metric-card__title">Inaccurate passes</h3>
                 <span className="metric-card__value">{formatCount(betweenLinesPassing.wrong)}</span>
                 <span className="metric-card__pct">{percent(betweenLinesPassing.wrong, passTotal)}% of passes</span>
               </div>,
@@ -312,9 +312,9 @@ function buildTopics(match: MatchStats): Topic[] {
             primary={completedPasses}
             secondary={betweenLinesPassing.wrong}
             primaryLabel="Completed"
-            secondaryLabel="Misplaced"
+            secondaryLabel="Inaccurate passes"
             primaryTone="positive"
-            secondaryTone="negative"
+            secondaryTone="warn"
             secondaryHref={passingClip}
             games={games}
             countUnit="passes"

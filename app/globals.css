@@ -13,7 +13,7 @@
   --tone-accent: #5aa2e0;
   --tone-positive: #3fb56b;
   --tone-negative: #e0616b;
-  --tone-warn: #e08a4f;
+  --tone-warn: #cf9c1a;
   --tone-muted: color-mix(in srgb, var(--sga-white) 26%, var(--sga-navy));
 
   --bg: var(--sga-navy);
@@ -943,6 +943,12 @@ body::before {
 .ranked__fill--negative,
 .legend__dot--negative {
   background: var(--tone-negative);
+}
+
+.meter__seg--warn,
+.ranked__fill--warn,
+.legend__dot--warn {
+  background: var(--tone-warn);
 }
 
 .meter__seg--muted,
