@@ -40,20 +40,20 @@
       "shortLabel": "NVA",
       "logo": "/clubs/northern-virginia-alliance.png",
       "offensiveScanning": {
-        "passesReceived": 35,
-        "noOffensiveScanning": 0,
+        "passesReceived": 34,
+        "noOffensiveScanning": 15,
         "videoLink": ""
       },
       "betweenLinesPassing": {
         "passes": 31,
-        "betweenLines": 0,
-        "wrong": 0,
+        "betweenLines": 7,
+        "wrong": 6,
         "videoLink": ""
       },
       "enteringBox": {
         "total": 10,
-        "inOrganization": 0,
-        "inTransition": 0,
+        "inOrganization": 6,
+        "inTransition": 4,
         "organizationRightWing": 0
       }
     }

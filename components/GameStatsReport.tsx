@@ -356,7 +356,7 @@ function buildTopics(match: MatchStats): Topic[] {
               countUnit="entries"
             />
           ) : null}
-          {enteringBox.inOrganization > 0 ? (
+          {enteringBox.organizationRightWing > 0 ? (
             <div className="metric-card">
               <h3 className="metric-card__title">In possession — right channel</h3>
               <p className="metric-card__headline">

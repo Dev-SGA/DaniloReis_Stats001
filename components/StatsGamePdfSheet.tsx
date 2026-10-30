@@ -329,7 +329,7 @@ export function StatsGamePdfSheet({
               />
             }
             footer={
-              enteringBox.inOrganization > 0 ? (
+              enteringBox.organizationRightWing > 0 ? (
                 <p className="spdf-note">
                   {formatCount(enteringBox.organizationRightWing)} of {formatCount(enteringBox.inOrganization)}{" "}
                   in-possession entries came from attacks down the right channel.
