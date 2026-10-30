@@ -12,10 +12,10 @@
   },
   "matches": [
     {
-      "id": "match-1",
-      "label": "Match 1",
-      "shortLabel": "Match 1",
-      "logo": "",
+      "id": "keystone-fc",
+      "label": "vs Keystone FC",
+      "shortLabel": "Keystone FC",
+      "logo": "/clubs/keystone-fc.png",
       "offensiveScanning": {
         "passesReceived": 38,
         "noOffensiveScanning": 10,
