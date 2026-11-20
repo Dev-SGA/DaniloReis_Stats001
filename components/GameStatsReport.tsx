@@ -10,6 +10,7 @@ import { MetricFlow } from "@/components/MetricFlow";
 import { SgaBrand } from "@/components/SgaBrand";
 import { SgaCornerBrand } from "@/components/SgaCornerBrand";
 import { TopicsBoard, type Topic } from "@/components/TopicsBoard";
+import { ProgressView } from "@/components/ProgressView";
 import { BRAND } from "@/lib/brand";
 import {
   formatCount,
@@ -378,6 +379,7 @@ function buildTopics(match: MatchStats): Topic[] {
 
 export function GameStatsReport({ report }: GameStatsReportProps) {
   const { player, meta, matches } = report;
+  const [tab, setTab] = useState<"match" | "progress">("match");
   const [seasonMode, setSeasonMode] = useState<SeasonMode>("total");
   const options = useMemo(() => {
     const season = seasonMatch(matches);
@@ -404,11 +406,11 @@ export function GameStatsReport({ report }: GameStatsReportProps) {
             <p className="report-header__eyebrow">{BRAND.legal}</p>
             <h1 className="report-header__title">{meta.title}</h1>
             <p className="report-header__meta">
-              {match.logo ? (
+              {tab === "progress" ? null : match.logo ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={match.logo} alt="" className="club-logo club-logo--meta" />
               ) : null}
-              {match.label}
+              {tab === "progress" ? "Progress across matches" : match.label}
             </p>
           </div>
         </header>
@@ -425,10 +427,35 @@ export function GameStatsReport({ report }: GameStatsReportProps) {
 
           <main className="report-main">
             <div className="view-panel">
-              <MatchSwitcher matches={options} activeId={match.id} onChange={setMatchId}>
-                {match.id === "season" ? <SeasonModeToggle mode={seasonMode} onChange={setSeasonMode} /> : null}
-              </MatchSwitcher>
-              <TopicsBoard topics={topics} />
+              <div className="match-nav__pills view-tabs" role="tablist" aria-label="Report view">
+                {(
+                  [
+                    { id: "match", label: "Match" },
+                    { id: "progress", label: "Progress" },
+                  ] as const
+                ).map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={tab === item.id}
+                    className={`match-nav__pill${tab === item.id ? " is-active" : ""}`}
+                    onClick={() => setTab(item.id)}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+              {tab === "progress" ? (
+                <ProgressView matches={matches} />
+              ) : (
+                <>
+                  <MatchSwitcher matches={options} activeId={match.id} onChange={setMatchId}>
+                    {match.id === "season" ? <SeasonModeToggle mode={seasonMode} onChange={setSeasonMode} /> : null}
+                  </MatchSwitcher>
+                  <TopicsBoard topics={topics} />
+                </>
+              )}
             </div>
           </main>
         </div>

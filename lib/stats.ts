@@ -174,3 +174,76 @@ export function toGameStats(report: StatsReport, match: MatchStats): GameStats {
     games: match.games,
   };
 }
+
+export type ProgressPoint = {
+  id: string;
+  label: string;
+  shortLabel: string;
+  logo: string;
+  quantity: number;
+  /** Success rate in percent (0-100). */
+  quality?: number;
+  qualityDetail?: string;
+};
+
+export type ProgressMetric = {
+  id: string;
+  title: string;
+  phase: "build-up" | "defensive";
+  quantityLabel: string;
+  qualityLabel?: string;
+  points: ProgressPoint[];
+};
+
+/** Metrics tracked in every match, ready for match-by-match trend charts. */
+export function progressMetrics(matches: MatchStats[]): ProgressMetric[] {
+  const base = (match: MatchStats) => ({
+    id: match.id,
+    label: match.label,
+    shortLabel: match.shortLabel,
+    logo: match.logo,
+  });
+  const rate = (good: number, total: number) => (total > 0 ? (good / total) * 100 : 0);
+
+  const metrics: (ProgressMetric | null)[] = [
+    {
+      id: "scanning",
+      title: "Offensive Scanning",
+      phase: "build-up",
+      quantityLabel: "Passes received",
+      qualityLabel: "With scanning",
+      points: matches.map((match) => {
+        const { passesReceived, noOffensiveScanning } = match.offensiveScanning;
+        const scanned = passesReceived - noOffensiveScanning;
+        return {
+          ...base(match),
+          quantity: passesReceived,
+          quality: rate(scanned, passesReceived),
+          qualityDetail: `${scanned} of ${passesReceived} with scanning`,
+        };
+      }),
+    },
+    {
+      id: "between-lines",
+      title: "Between-Lines Passing",
+      phase: "build-up",
+      quantityLabel: "Passes",
+      qualityLabel: "Between lines",
+      points: matches.map((match) => ({
+        ...base(match),
+        quantity: match.betweenLinesPassing.passes,
+        quality: rate(match.betweenLinesPassing.betweenLines, match.betweenLinesPassing.passes),
+        qualityDetail: `${match.betweenLinesPassing.betweenLines} of ${match.betweenLinesPassing.passes} between lines`,
+      })),
+    },
+    {
+      id: "entering-box",
+      title: "Entering the Box",
+      phase: "build-up",
+      quantityLabel: "Entries",
+      points: matches.map((match) => ({ ...base(match), quantity: match.enteringBox.total })),
+    },
+  ];
+
+  return metrics.filter((metric): metric is ProgressMetric => metric !== null);
+}
